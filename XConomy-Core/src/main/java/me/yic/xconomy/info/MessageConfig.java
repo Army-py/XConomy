@@ -22,6 +22,7 @@ package me.yic.xconomy.info;
 public enum MessageConfig {
     NO_ACCOUNT("no_account"),
     PAY_RECEIVE("pay_receive"),
+    OFFLINE_PAYMENT_TIPS("offline_payment_tips"),
     DELETE_DATA("delete_data"),
     DELETE_DATA_ADMIN("delete_data_admin"),
     PAYTOGGLE_TRUE("paytoggle_true"),

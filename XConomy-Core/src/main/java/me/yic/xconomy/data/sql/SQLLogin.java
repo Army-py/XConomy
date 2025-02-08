@@ -62,24 +62,64 @@ public class SQLLogin extends SQL {
     }
 
 
+    // public static void getPlayerlogin(CPlayer pp) {
+    //     try {
+    //         System.out.println("Player " + pp.getName() + " login 2");
+    //         Connection connection = database.getConnectionAndCheck();
+    //         PreparedStatement statement = connection.prepareStatement("select player, amount from " + tableRecordName +
+    //                 " where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
+    //                 "(select last_time from " + tableLoginName + " where UUID = ?);");
+    //         if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
+    //             statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
+    //         }else{
+    //             statement.setString(1, pp.getUniqueId().toString());
+    //         }
+    //
+    //         ResultSet rs = statement.executeQuery();
+    //
+    //         while (rs.next()) {
+    //             String otherp = rs.getString(1);
+    //             double amount = rs.getDouble(2);
+    //             sendMessages(pp, otherp, amount);
+    //             System.out.println("Player " + pp.getName() + " received " + amount + " from " + otherp);
+    //         }
+    //
+    //         rs.close();
+    //         statement.close();
+    //         database.closeHikariConnection(connection);
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
     public static void getPlayerlogin(CPlayer pp) {
         try {
             Connection connection = database.getConnectionAndCheck();
-            PreparedStatement statement = connection.prepareStatement("select player, amount from " + tableRecordName +
-                    " where operation = 'WITHDRAW' and type = 'PLAYER_COMMAND' and command like('pay " + pp.getName() + "%') and datetime > " +
-                    "(select last_time from " + tableLoginName + " where UUID = ?);");
+            PreparedStatement statement = connection.prepareStatement("select amount, operation from " + tableRecordName +
+                    " where uid = ? and datetime > (select last_time from " + tableLoginName + " where UUID = ?);");
             if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE)) {
                 statement.setString(1, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
+                statement.setString(2, DataCon.getPlayerData(pp.getUniqueId()).getUniqueId().toString());
             }else{
                 statement.setString(1, pp.getUniqueId().toString());
+                statement.setString(2, pp.getUniqueId().toString());
             }
 
             ResultSet rs = statement.executeQuery();
 
+            double totalAmount = 0;
             while (rs.next()) {
-                String otherp = rs.getString(1);
-                double amount = rs.getDouble(2);
-                sendMessages(pp, otherp, amount);
+                double amount = rs.getDouble(1);
+                String operation = rs.getString(2);
+                if (operation.equals("WITHDRAW")) {
+                    totalAmount -= amount;
+                } else if (operation.equals("DEPOSIT")) {
+                    totalAmount += amount;
+                }
+            }
+
+            if (totalAmount != 0) {
+                sendMessages(pp, totalAmount);
             }
 
             rs.close();
@@ -90,10 +130,24 @@ public class SQLLogin extends SQL {
         }
     }
 
-    private static void sendMessages(CPlayer sender, String name, double amount) {
+    // private static void sendMessages(CPlayer sender, String name, double amount) {
+    //     String PREFIX = AdapterManager.translateColorCodes("prefix");
+    //     String message = AdapterManager.translateColorCodes(MessageConfig.PAY_RECEIVE);
+    //     message = PREFIX + message.replace("%player%", name).replace("%amount%", DataFormat.shown(amount));
+    //     if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
+    //         if (message.contains("\\n")) {
+    //             String[] messs = message.split("\\\\n");
+    //             sender.sendMessage(messs);
+    //         } else {
+    //             sender.sendMessage(message);
+    //         }
+    //     }
+    // }
+
+    private static void sendMessages(CPlayer sender, double amount) {
         String PREFIX = AdapterManager.translateColorCodes("prefix");
-        String message = AdapterManager.translateColorCodes(MessageConfig.PAY_RECEIVE);
-        message = PREFIX + message.replace("%player%", name).replace("%amount%", DataFormat.shown(amount));
+        String message = AdapterManager.translateColorCodes(MessageConfig.OFFLINE_PAYMENT_TIPS);
+        message = PREFIX + message.replace("%amount%", DataFormat.shown(amount));
         if (!message.replace(PREFIX, "").equalsIgnoreCase("")) {
             if (message.contains("\\n")) {
                 String[] messs = message.split("\\\\n");

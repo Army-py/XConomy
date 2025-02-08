@@ -68,6 +68,7 @@ public class LanguagesManager {
         ll.add("staff_displayed");
         ll.add("pay");
         ll.add("pay_receive");
+        ll.add("offline_payment_tips");
         ll.add("pay_fail");
         ll.add("pay_self");
         ll.add("paytoggle_true");
