@@ -57,6 +57,8 @@ public class DefaultConfig {
     public boolean PAY_TIPS = false;
     public boolean USERNAME_IGNORE_CASE = config.getBoolean("Settings.username-ignore-case");
 
+    public boolean DISABLE_TAB_LIST_PERMISSION = config.getBoolean("Settings.disable-tab-list-permission");
+
     public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
     public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
 

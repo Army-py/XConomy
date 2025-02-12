@@ -19,6 +19,7 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.AdapterManager;
+import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
@@ -40,7 +41,7 @@ public class PlayerConnection{
             DataLink.newPlayer(player);
         }
 
-        if (player.hasPermission("xconomy.admin.hidden")){
+        if (!XConomyLoad.Config.DISABLE_TAB_LIST_PERMISSION && player.hasPermission("xconomy.admin.hidden")){
             TabListCon.remove_Tab_PlayerList(player.getName());
             HiddenINFO.addHidden(player.getName());
         }else {

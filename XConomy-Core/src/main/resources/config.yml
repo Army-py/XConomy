@@ -54,6 +54,8 @@ Settings:
   offline-pay-transfer-tips: false
   #Ignore the case of player names
   username-ignore-case: false
+  # Disable or not the permission to hide player in the tab list
+  disable-tab-list-permission: false
 
 
 #It can solve the problem that some plugins need to create non-player accounts, such as Factions
