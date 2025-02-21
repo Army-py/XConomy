@@ -30,8 +30,7 @@ public enum SyncType {
     DELETEDATA("deletedata"),
 
     //==================== Tab ====================
-    TAB_JOIN("tab_join"),
-    TAB_QUIT("tab_quit");
+    TAB_SYNC("tab_sync");
 
     final String value;
 

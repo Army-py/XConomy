@@ -59,7 +59,7 @@ public class SyncMessage extends SyncData{
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         AdapterManager.PLUGIN.broadcastMessage(getMessage());
     }
 }

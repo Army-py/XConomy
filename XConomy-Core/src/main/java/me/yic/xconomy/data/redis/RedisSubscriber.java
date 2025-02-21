@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.data.redis;
 
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.data.ProcessSyncData;
 import redis.clients.jedis.BinaryJedisPubSub;
@@ -26,7 +27,7 @@ public class RedisSubscriber extends BinaryJedisPubSub {
 
     @Override
     public void onMessage(byte[] channel, byte[] message) {
-        ProcessSyncData.process(message);
+        AdapterManager.runTaskAsynchronously(() -> ProcessSyncData.process(message));
     }
 
     @Override

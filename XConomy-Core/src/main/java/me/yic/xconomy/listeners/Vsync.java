@@ -29,8 +29,6 @@ import me.yic.xconomy.data.syncdata.tab.SyncTab;
 import me.yic.xconomy.info.SyncType;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class Vsync {
@@ -86,14 +84,6 @@ public class Vsync {
                 }
             }else if (ob instanceof SyncTab) {
                 SyncTab sj = (SyncTab) ob;
-                String sign = sj.getSign();
-                List<String> allname = new ArrayList<>();
-                for (Player pn : XConomyVelocity.getInstance().server.getAllPlayers()){
-                    if (!sj.isinHidList(pn.getUsername())) {
-                        allname.add(pn.getUsername());
-                    }
-                }
-                sj.setallPlayers(allname);
             }
 
             oos.writeObject(ob);

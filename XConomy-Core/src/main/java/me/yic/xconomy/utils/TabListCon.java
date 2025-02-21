@@ -21,49 +21,46 @@ package me.yic.xconomy.utils;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.info.HiddenINFO;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TabListCon {
 
-    private static List<String> Tab_PlayerList = new ArrayList<>();
-    public static void add_Tab_PlayerList(String name){
-        if (!Tab_PlayerList.contains(name)) {
+    private static Set<String> tabPlayerList = new HashSet<>();
+
+    public static void addPlayerName(String name){
+        if (!tabPlayerList.contains(name)) {
             if (name != null && !HiddenINFO.getHidden(name)) {
                 if (XConomyLoad.getSyncData_Enable()) {
-                    ArrayList<String> copiedList = new ArrayList<>(Tab_PlayerList);
+                    Set<String> copiedList = new HashSet<>(tabPlayerList);
                     copiedList.add(name);
                     renew_Tab_PlayerList(copiedList);
                 }else{
-                    Tab_PlayerList.add(name);
+                    tabPlayerList.add(name);
                 }
             }
         }
     }
 
-    public static void renew_Tab_PlayerList(List<String> rn){
+    public static void removePlayerName(String name){
+        if (tabPlayerList.contains(name)) {
+            if (XConomyLoad.getSyncData_Enable()) {
+                Set<String> copiedList = new HashSet<>(tabPlayerList);
+                copiedList.removeIf(ee -> ee == null || ee.equals(name));
+                renew_Tab_PlayerList(copiedList);
+            }else{
+                tabPlayerList.removeIf(ee -> ee == null || ee.equals(name));
+            }
+        }
+    }
+
+    public static void renew_Tab_PlayerList(Set<String> rn){
         if (rn != null) {
-            Tab_PlayerList = rn;
+            tabPlayerList = rn;
         }
     }
 
-    public static List<String> get_Tab_PlayerList(){
-        return Tab_PlayerList;
-    }
-
-    public static void remove_Tab_PlayerList(String name){
-        if (XConomyLoad.getSyncData_Enable()) {
-            ArrayList<String> copiedList = new ArrayList<>(Tab_PlayerList);
-            copiedList.removeIf(ee -> ee == null || ee.equals(name));
-            renew_Tab_PlayerList(copiedList);
-        }else{
-            Tab_PlayerList.removeIf(ee -> ee == null || ee.equals(name));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void redis_sync_Tab_PlayerList(){
-        List<String> rsl = (List<String>) RedisConnection.getdata("Tab_List");
-        renew_Tab_PlayerList(rsl);
+    public static Set<String> get_Tab_PlayerList(){
+        return tabPlayerList;
     }
 }

@@ -43,7 +43,7 @@ public class SyncUUID extends SyncData{
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         Cache.syncOnlineUUIDCache(getOldname(), getNewname(), getUniqueId());
     }
 }

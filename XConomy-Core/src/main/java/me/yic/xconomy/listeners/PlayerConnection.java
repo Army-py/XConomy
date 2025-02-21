@@ -19,7 +19,6 @@
 package me.yic.xconomy.listeners;
 
 import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.DataCon;
@@ -27,8 +26,6 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.tab.SyncTab;
 import me.yic.xconomy.info.HiddenINFO;
-import me.yic.xconomy.info.SyncChannalType;
-import me.yic.xconomy.utils.RedisConnection;
 import me.yic.xconomy.utils.TabListCon;
 
 public class PlayerConnection{
@@ -42,14 +39,12 @@ public class PlayerConnection{
         }
 
         if (!XConomyLoad.Config.DISABLE_TAB_LIST_PERMISSION && player.hasPermission("xconomy.admin.hidden")){
-            TabListCon.remove_Tab_PlayerList(player.getName());
+            TabListCon.removePlayerName(player.getName());
             HiddenINFO.addHidden(player.getName());
         }else {
-            TabListCon.add_Tab_PlayerList(player.getName());
-
-            if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
-                RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
-            }
+            AdapterManager.runTaskLaterAsynchronously(() -> {
+                TabListCon.addPlayerName(player.getName());
+            }, 1);
 
             if (XConomyLoad.getSyncData_Enable()) {
                 DataCon.SendMessTask(new SyncTab(player.getName(), true));
@@ -67,11 +62,9 @@ public class PlayerConnection{
             Cache.clearCache();
         }
 
-        TabListCon.remove_Tab_PlayerList(player.getName());
+        System.out.println("Remove player from TabList: " + player.getName());
+        TabListCon.removePlayerName(player.getName());
 
-        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
-            RedisConnection.insertdata("Tab_List", TabListCon.get_Tab_PlayerList(), 1000);
-        }
         if (XConomyLoad.getSyncData_Enable()) {
             DataCon.SendMessTask(new SyncTab(player.getName(), false));
         }

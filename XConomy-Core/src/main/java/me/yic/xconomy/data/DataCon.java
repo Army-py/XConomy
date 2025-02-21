@@ -202,8 +202,6 @@ public class DataCon {
         }
 
         boolean isallbool = targettype.equals("all");
-        //if (targettype.equals("all")) {
-        //} else
 
         if (XConomyLoad.getSyncData_Enable()) {
             SendMessTask(new SyncBalanceAll(isallbool, isAdd, amount));

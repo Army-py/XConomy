@@ -28,7 +28,7 @@ public class SyncDelData extends PlayerData {
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         DataCon.deletePlayerData(this);
     }
 }

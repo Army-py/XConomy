@@ -60,7 +60,7 @@ public class PlayerData extends SyncData {
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         if (!XConomyLoad.Config.DISABLE_CACHE) {
             if (Cache.CacheContainsKey(getUniqueId()) && Cache.getDataFromCache(getUniqueId()).balance.compareTo(vbalance) != 0) {
                 DataCon.deletedatafromcache(getUniqueId());

@@ -73,8 +73,8 @@ public class ProcessSyncData {
                 if (p.isOnline()) {
                     p.sendMessage(sd.getMessage());
                 }
-            }else{
-                ob.SyncStart();
+            } else {
+                ob.startSync();
             }
         } catch (Exception e) {
             e.printStackTrace();

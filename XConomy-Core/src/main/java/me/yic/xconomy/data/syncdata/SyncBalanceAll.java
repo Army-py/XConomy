@@ -50,7 +50,7 @@ public class SyncBalanceAll extends SyncData{
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         Cache.clearCache();
         if (getisOnline()) {
             DataLink.saveall("online", getAmount(), getC(), null);

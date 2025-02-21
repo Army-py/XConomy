@@ -44,7 +44,7 @@ public class SyncPermission extends SyncData{
     }
 
     @Override
-    public void SyncStart() {
+    public void startSync() {
         if (getType() == 1){
             if (getUniqueId() == null){
                 PermissionINFO.globalpayment = getValue();

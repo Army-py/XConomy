@@ -72,5 +72,5 @@ public abstract class SyncData implements Serializable {
         return output;
     }
 
-    public abstract void SyncStart();
+    public abstract void startSync();
 }

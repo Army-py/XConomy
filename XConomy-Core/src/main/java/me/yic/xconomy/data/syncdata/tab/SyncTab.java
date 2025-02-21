@@ -18,57 +18,38 @@
  */
 package me.yic.xconomy.data.syncdata.tab;
 
-import me.yic.xconomy.XConomyLoad;
+import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.data.syncdata.SyncData;
-import me.yic.xconomy.info.HiddenINFO;
-import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.info.SyncType;
 import me.yic.xconomy.utils.TabListCon;
 
-import java.util.List;
-
 public class SyncTab extends SyncData {
-    List<String> allname;
-    List<String> hidename;
     private final String name;
-    private final boolean isadd;
+    private final boolean isAdded;
 
-    public SyncTab(String name, boolean isadd){
-        super(SyncType.TAB_JOIN, null);
+    public SyncTab(String name, boolean isAdded) {
+        super(SyncType.TAB_SYNC, null);
+
         this.name = name;
-        this.isadd = isadd;
-        this.hidename = HiddenINFO.getHidList();
+        this.isAdded = isAdded;
     }
 
-    public void setallPlayers(List<String> allname){
-        this.allname = allname;
-    }
     public String getName(){
         return this.name;
     }
 
-    public boolean getisAdd(){
-        return this.isadd;
-    }
-
-    public boolean isinHidList(String name){
-        return hidename.contains(name);
+    public boolean isAdded(){
+        return this.isAdded;
     }
 
     @Override
-    public void SyncStart() {
-        if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)){
-            TabListCon.redis_sync_Tab_PlayerList();
-            return;
-        }
-        for (String hn : hidename){
-            HiddenINFO.addHidden(hn);
-        }
-        if (allname != null && allname.size() > 0) {
-            TabListCon.renew_Tab_PlayerList(allname);
-        }
-        if (getisAdd() && !TabListCon.get_Tab_PlayerList().contains(name)){
-            TabListCon.add_Tab_PlayerList(name);
+    public void startSync() {
+        if (isAdded()){
+            AdapterManager.runTaskLaterAsynchronously(() -> {
+                TabListCon.addPlayerName(name);
+            }, 1);
+        } else {
+            TabListCon.removePlayerName(name);
         }
     }
 }

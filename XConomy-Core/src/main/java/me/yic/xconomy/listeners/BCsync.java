@@ -31,8 +31,6 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BCsync implements Listener {
 
@@ -68,8 +66,11 @@ public class BCsync implements Listener {
                 return;
             }
 
+            System.out.println("Received data");
+
             Object ob = ios.readObject();
             if (ob instanceof SyncMessage) {
+                System.out.println("Received SyncMessage");
                 SyncMessage sd = (SyncMessage) ob;
                 if (sd.getSyncType().equals(SyncType.MESSAGE)) {
                     ProxiedPlayer p = ProxyServer.getInstance().getPlayer(sd.getUniqueId());
@@ -85,15 +86,9 @@ public class BCsync implements Listener {
                     }
                 }
             }else if (ob instanceof SyncTab) {
+                System.out.println("Received SyncTab");
                 SyncTab sj = (SyncTab) ob;
-                String sign = sj.getSign();
-                List<String> allname = new ArrayList<>();
-                for (ProxiedPlayer pn : XConomyBungee.getInstance().getProxy().getPlayers()){
-                    if (!sj.isinHidList(pn.getName())) {
-                        allname.add(pn.getName());
-                    }
-                }
-                sj.setallPlayers(allname);
+                sj.startSync();
             }
             oos.writeObject(ob);
             oos.flush();
